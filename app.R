@@ -8,6 +8,7 @@ library(shiny)
 library(SSHAARP)
 library(shinybusy)
 
+#get wd
 wd=getwd()
 
 ui <- fixedPage(

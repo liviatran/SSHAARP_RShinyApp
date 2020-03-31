@@ -1,5 +1,5 @@
 #SSHAARP R Shiny Application
-# v 0.2
+# v 0.3
 # by: Livia Tran
 # 3/30/20
 
@@ -7,6 +7,8 @@
 library(shiny)
 library(SSHAARP)
 library(shinybusy)
+
+wd=getwd()
 
 ui <- fixedPage(
   

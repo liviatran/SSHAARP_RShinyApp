@@ -1,5 +1,5 @@
 #SSHAARP R Shiny Application
-# v 0.1
+# v 0.2
 # by: Livia Tran
 # 3/30/20
 
@@ -50,7 +50,7 @@ server<-function(input, output) {
     
 
     
-    if((grepl("Your motif", message$PALMoutput)==TRUE) | (grepl("not present in the alignment", message$PALMoutput)==TRUE) | (grepl("not a valid locus", message$PALMoutput)==TRUE)){
+    if(any((grepl("Your motif", message$PALMoutput)==TRUE) | (grepl("not present in the alignment", message$PALMoutput)==TRUE) | (grepl("not a valid locus", message$PALMoutput)==TRUE)) | (is.data.frame(message$PALMoutput)==TRUE)){
       output$map <- renderImage({
         validate(need(input$makemap, ""))
         input$makemap
@@ -96,7 +96,6 @@ server<-function(input, output) {
     output$map<-NULL
     })
 }
-
 
 
 shinyApp(ui, server)

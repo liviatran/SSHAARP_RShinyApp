@@ -1,7 +1,7 @@
 #SSHAARP R Shiny Application
-# v 0.3
+# v 0.4
 # by: Livia Tran
-# 3/30/20
+# 3/31/20
 
 
 library(shiny)
@@ -28,7 +28,7 @@ ui <- fixedPage(
     downloadButton("downloadData", label = "Download your map here!"),
     div(style="margin-bottom:50px"),
     actionButton("reset","Clear map")
-
+    
     
   ),
   
@@ -46,35 +46,33 @@ server<-function(input, output) {
   
   observeEvent(input$makemap, {
     
-  
+    
     message$PALMoutput<-SSHAARP::PALM(input$motif, color=input$colorcheck, filterMigrant = input$filterMig)
     
-      output$text<-renderPrint({message$PALMoutput})
+    output$text<-renderPrint({message$PALMoutput})
     
-
+    
     
     if(any((grepl("Your motif", message$PALMoutput)==TRUE) | (grepl("not present in the alignment", message$PALMoutput)==TRUE) | (grepl("not a valid locus", message$PALMoutput)==TRUE)) | (is.data.frame(message$PALMoutput)==TRUE)){
       output$map <- renderImage({
-        validate(need(input$makemap, ""))
-        input$makemap
+        
         # Return a list containing the filename
-        return(list(src = paste(wd,"/", "OOPS3.jpg", sep=""),
+        isolate(return(list(src = paste(wd,"/", "OOPS3.jpg", sep=""),
                     contentType = 'image/jpg',
                     width = 580,
-                    height = 500))
+                    height = 500)))
       }, deleteFile = FALSE)
       
     }
     
     else{
       output$map <- renderImage({
-        validate(need(input$makemap, ""))
-        input$makemap
+       
         #Return a list containing the filename
-        return(list(src = paste(wd,"/", input$motif, ".jpg", sep=""),
+        isolate(return(list(src = paste(wd,"/", input$motif, ".jpg", sep=""),
                     contentType = 'image/jpg',
                     width = 707,
-                    height = 500))
+                    height = 500)))
       }, deleteFile = FALSE)}
     
     
@@ -88,19 +86,18 @@ server<-function(input, output) {
       },
       contentType = "image/jpg"
     )
-
     
-    })
+    
+  })
   
   
   
   observeEvent(input$reset, {
     output$text <- NULL
     output$map<-NULL
-    })
+  })
 }
 
 
 shinyApp(ui, server)
-
 

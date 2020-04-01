@@ -1,5 +1,5 @@
 #SSHAARP R Shiny Application
-# v 0.5
+# v 0.6
 # by: Livia Tran
 # 3/31/20
 
@@ -18,9 +18,9 @@ ui <- fixedPage(
   titlePanel("SSHAARP - Searching Shared HLA Amino Acid Prevalence"),
   sidebarPanel(
     textInput("motif", h4("Enter motif")),
-    selectInput("colorcheck", h4("Color"), 
+    selectInput("colorcheck", h4("Map type"), 
                 choices = list("Color" = T, "Greyscale" = F), selected = 1),
-    selectInput("filterMig", h3("Filter migrant populations?"), 
+    selectInput("filterMig", h3("Exclude migrant populations?"), 
                 choices = list("Yes" = T, "No" = F), selected = 1),
     actionButton("makemap", "Make my map!"),
     hr(),
@@ -73,8 +73,7 @@ server<-function(input, output) {
     
     output$downloadData <- downloadHandler(
       filename <- function() {
-        paste(input$motif, ".jpg", sep="")
-      },
+        paste(input$motif, ".jpg", sep="")},
       
       content <- function(file) {
         file.copy(paste(input$motif, ".jpg", sep=""), file)
@@ -85,8 +84,6 @@ server<-function(input, output) {
     
 
   })
-  
-  
   
   observeEvent(input$reset, {
     output$text <- NULL

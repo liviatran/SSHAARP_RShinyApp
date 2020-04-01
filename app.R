@@ -20,7 +20,7 @@ ui <- fixedPage(
     textInput("motif", h4("Enter motif")),
     selectInput("colorcheck", h4("Map type"), 
                 choices = list("Color" = T, "Greyscale" = F), selected = 1),
-    selectInput("filterMig", h3("Exclude migrant populations?"), 
+    selectInput("filterMig", h4("Exclude migrant populations?"), 
                 choices = list("Yes" = T, "No" = F), selected = 1),
     actionButton("makemap", "Make my map!"),
     hr(),

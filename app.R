@@ -1,7 +1,7 @@
 #SSHAARP R Shiny Application
-# v 0.7
+# v 0.8
 # by: Livia Tran
-# 4/2/20
+# 4/3/20
 
 
 library(shiny)
@@ -20,17 +20,17 @@ ui <- fixedPage(
     textInput("motif", h4("Enter motif")),
     selectInput("colorcheck", h4("Map type"), 
                 choices = list("Color" = T, "Greyscale" = F), selected = 1),
-    selectInput("filterMig", h4("Exclude migrant populations?"), 
+    selectInput("filterMig", h4("Exclude admixed and migrant populations?"), 
                 choices = list("Yes" = T, "No" = F), selected = 1),
     actionButton("makemap", "Make map!"),
     hr(),
     div(style="margin-bottom:10px"),
-    downloadButton("downloadData", label = "Download my map!"),
+    downloadButton("downloadData", label = "Download map!"),
     div(style="margin-bottom:20px"),
     actionButton("reset","Clear")
   ),
   
-
+  
   mainPanel(
     tabsetPanel(type="tabs",
                 
@@ -42,7 +42,7 @@ ui <- fixedPage(
                 tabPanel("About", 
                          uiOutput("aboutText")))
     
-    )
+  )
 )
 
 
@@ -63,7 +63,7 @@ server<-function(input, output) {
       else{
         cat(message$PALMoutput)
       }
-
+      
     })
     
     
@@ -72,21 +72,21 @@ server<-function(input, output) {
         
         # Return a list containing the filename
         isolate(return(list(src = paste(wd,"/", "OOPS3.jpg", sep=""),
-                    contentType = 'image/jpg',
-                    width = wide,
-                    height = high)))
+                            contentType = 'image/jpg',
+                            width = wide,
+                            height = high)))
       }, deleteFile = FALSE)
       
     }
     
     else{
       output$map <- renderImage({
-       
+        
         #Return a list containing the filename
         isolate(return(list(src = paste(wd,"/", input$motif, ".jpg", sep=""),
-                    contentType = 'image/jpg',
-                    width = wide,
-                    height = high)))
+                            contentType = 'image/jpg',
+                            width = wide,
+                            height = high)))
       }, deleteFile = FALSE)}
     
     
@@ -99,9 +99,9 @@ server<-function(input, output) {
         file.remove(paste(input$motif, ".jpg", sep=""))
       }
       
-      )
+    )
     
-
+    
   })
   
   observeEvent(input$reset, {
@@ -112,14 +112,14 @@ server<-function(input, output) {
   output$aboutText<-renderUI({
     HTML("<font size='4'>Authors:</font><br>
                    Livia Tran - <i>livia.tran@ucsf.edu</i> <br>
-                   Steven Mack - <i>sjmack@ucsf.edu </i>
+                   Steven Mack - <i>steven.mack@ucsf.edu </i>
                    <br>
                    <br>
-                   This application utilizes the <b>SSHAARP</b> package to create a frequency heatmap for a user-defined HLA amino acid motif. Users are able to create frequency heatmaps based on allele frequency data obtained from the Solberg dataset, or from the Allele Frequency Network Database (AFND).
+                   This application applies the <b>SSHAARP</b> package to create a frequency heatmap for a user-defined HLA amino acid motif. SSHAARP creates frequency heatmaps based on allele frequency data from the Solberg dataset or from the Allele Frequency Network Database (AFND).
                    <br>
                    The Solberg dataset (See: <u>doi: 10.1016/j.humimm.2008.05.001</u>) is a meta-analysis of HLA allele frequency data from 497 population samples, representing ~66,800 individuals around the world. 
                    <br>
-                   The dataset describes the continent a given population is from based on 10 major world regions. To account for admixed and migratory populations, significantly admixed populations were placed in an 'other' group and assigned a higher complexity(e.g an estimation of the degree of potential admixture in a population sample) rating. Migrant populations were documented with 'mig' following their complexity rating.  
+                   The dataset describes the continent a given population is from based on 10 major world regions. To account for admixed and migratory populations, significantly admixed populations were placed in an 'other' group and assigned a higher complexity (e.g an estimation of the degree of potential admixture in a population sample) rating. Migrant populations were documented with 'mig' following their complexity rating.  
                    <br>
                    The user has the ability to exclude migrant populations in the generated map by selecting the 'Yes' option in the drop-down menu for 'Exclude migrant populations?'. The color of the map output may also be defined; from the 'Color' drop-down menu, select color for a color frequency heatmap, or greyscale for a black and white frequency heatmap. 
                    <br>
@@ -137,12 +137,12 @@ server<-function(input, output) {
                    <br>
                    <b><font size='2'>Your motif is formatted incorrectly. Please use the Locus*##$~##$~##$ format, where ## identifies a peptide position, and $ identifies an amino acid residue.</b></font>
                       <br>
-                      -The format of the motif you entered is incorrect. Follow the Locus*##$~##$~##$ format to resolve this error message.
+                      -The format of the motif entered is incorrect. Follow the Locus*##$~##$~##$ format to resolve this error message.
                       <br>
                       <br>
                    <b><font size='2'>'Locus' does not exist</b></font>
                       <br>
-                      -The HLA locus you entered is not a locus for which petpide alignments are available in the ANHIG/IMGTHLA Github Repository.
+                      -The HLA locus entered is not a locus for which petpide alignments are available in the ANHIG/IMGTHLA Github Repository.
                      <br>
                      <br>
                    <b><font size='2'>One or more of your amino acid positions is not present in the alignment. Please make sure amino acid positions of interest are present in the current release of ANHIG/IMGTHLA alignments. </b></font>
@@ -153,16 +153,14 @@ server<-function(input, output) {
                    <b><font size='2'>'Motif entered': No alleles possess this motif</b></font>
                   <br>             
                    - The motif entered is not found in any alleles in the current release of ANHIG/IMGTHLA alignments."
-                   )
+    )
   })
-    
-    
-              
-    
-
+  
+  
+  
+  
+  
 }
 
 
 shinyApp(ui, server)
-
-

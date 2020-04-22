@@ -1,7 +1,7 @@
 #SSHAARP R Shiny Application
-# v 0.8
+# v 0.9
 # by: Livia Tran
-# 4/3/20
+# 4/21/20
 
 
 library(shiny)
@@ -46,7 +46,7 @@ ui <- fixedPage(
 )
 
 
-server<-function(input, output) {
+server<-function(input, output, session) {
   
   message <- reactiveValues(PALMoutput=NULL)
   wide=707
@@ -67,7 +67,7 @@ server<-function(input, output) {
     })
     
     
-    if(any((grepl("Your motif", message$PALMoutput)==TRUE) | (grepl("not present in the alignment", message$PALMoutput)==TRUE) | (grepl("not a valid locus", message$PALMoutput)==TRUE)) | (is.data.frame(message$PALMoutput)==TRUE)){
+    if(any((grepl("Your motif", message$PALMoutput)==TRUE) | (grepl("not present in the alignment", message$PALMoutput)==TRUE) | (grepl("not a valid locus", message$PALMoutput)==TRUE)) | (grepl("No alleles possess this motif", message$PALMoutput)==TRUE)){
       output$map <- renderImage({
         
         # Return a list containing the filename
@@ -107,6 +107,10 @@ server<-function(input, output) {
   observeEvent(input$reset, {
     output$text <- NULL
     output$map<-NULL
+    updateTextInput(session, "motif", value="")
+    updateSelectInput(session, "colorcheck", choices = "Color")
+    updateSelectInput(session, "filterMig",  choices = "Yes")
+
   })
   
   output$aboutText<-renderUI({
@@ -150,7 +154,7 @@ server<-function(input, output) {
                       - The motif entered has one or more amino acid positions not present in the alignment. To see which amino acid positions are in the alignment, use one of the 'Locus'_prot.txt files at https://github.com/ANHIG/IMGTHLA/tree/Latest/alignments.
                    <br>
                    <br>
-                   <b><font size='2'>'Motif entered': No alleles possess this motif</b></font>
+                   <b><font size='2'>'Motif entered' : No alleles possess this motif</b></font>
                   <br>             
                    - The motif entered is not found in any alleles in the current release of ANHIG/IMGTHLA alignments."
     )
